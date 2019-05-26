@@ -1,41 +1,99 @@
 import React, { Component } from 'react';
-import { BrowserRouter as Router, Route, Link} from "react-router-dom"
+import { BrowserRouter, Route } from 'react-router-dom';
 import "bootstrap/dist/css/bootstrap.min.css";
 
-import CreateTodo from "./components/create-todo.component";
-import EditTodo from "./components/edit-todo.component";
 import TodosList from "./components/todos-list.component"
 
-import logo from "./logo.svg";
+class App extends Component {
+  constructor(props){
+      super(props);
 
-class App extends Component{
+      this.onChangeTodoDescriprtion = this.onChangeTodoDescriprtion.bind(this);
+      this.onChangeTodoResponsible = this.onChangeTodoResponsible.bind(this);
+      this.onChangeTodoPriority = this.onChangeTodoPriority.bind(this);
+      this.onSubmit = this.onSubmit.bind(this);
+
+      this.state = {
+          todo_description: '',
+          todo_responsible: '',
+          todo_priority: '', 
+          todo_completed: false,
+          redirect: false
+      }
+  }
+
+  onChangeTodoDescriprtion(e) {
+      this.setState({
+          todo_description: e.target.value
+      });
+  }
+
+  onChangeTodoResponsible(e) {
+      this.setState({
+          todo_responsible: e.target.value
+      });
+  }
+
+  onChangeTodoPriority(e) {
+      this.setState({
+          todo_priority: e.target.value
+      });
+  }
+
+  onSubmit(e) {
+      e.preventDefault();
+
+      console.log(`Form submitted:`);
+      console.log(`Redirect: ${this.state.redirect}`);
+
+      this.setState({
+       redirect: true
+    });
+  }
+
   render() {
-    return (
-      <Router>
-        <div className="container">
-          <nav className="navbar navbar-expand-lg navbar-light bg-light">
-            <a class="navbar-brand" href="" target="_blank">
-              <img src={logo} width="30" height="30" alt="" />
-            </a>
-            <Link to="/" className="navbar-brand">MERN Todo</Link>
-            <div className="collpase navbar-collapse">
-              <ul className="navbar-nav mr-auto">
-                <li className="navbar-item">
-                  <Link to="/" className="nav-link"> Todos </Link>
-                </li>
-                <li classname="navbar-item">
-                  <Link to="/create" className="nav-link"> Create Todo </Link>
-                </li>
-              </ul>
-            </div>
-          </nav>
-          <br/>
-        <Route path="/" exact component={TodosList} />
-        <Route path="/edit/:id" component={EditTodo} />
-        <Route path="/create" component={CreateTodo} />
-        </div>
-      </Router>
-    );
+      if (this.state.redirect) {
+        //return (<h1>Test</h1>)
+        return (
+          <BrowserRouter>
+            <Route path="/list" exact component={TodosList} />
+          </BrowserRouter>
+        )
+      }
+      return (
+          <div style={{marginTop: "5%"}}>
+              <div className="container">
+                <h3>GID</h3>
+                <form onSubmit={this.onSubmit}>
+                    <div className="form-group">
+                        <label>Email: </label>
+                        <input type="email"
+                                className="form-control"
+                                style={{maxWidth: 400}}
+                                value={this.state.todo_description}
+                                onChange={this.onChangeTodoDescriprtion}
+                                />
+                    </div>
+
+                    <div className="form-group">
+                        <label>Password: </label>
+                        <input type="password"
+                                className="form-control"
+                                style={{maxWidth: 400}}
+                                value={this.state.todo_responsible}
+                                onChange={this.onChangeTodoResponsible}
+                                />
+                    </div>
+
+                    <div className="form-group">
+                        <div className="form-group">
+                            <input type="submit" value="Login" className="btn btn-primary" />
+                        </div>
+                    </div>
+                </form>
+              </div>
+          </div>
+      )
   }
 }
 
