@@ -1,42 +1,62 @@
-import React, { Component } from 'react';
-import { BrowserRouter as Router, Route, Link} from "react-router-dom"
-import "bootstrap/dist/css/bootstrap.min.css";
+import React, { Component, Fragment } from 'react';
+import { Link } from "react-router-dom";
+import { Nav, Navbar, NavItem } from "react-bootstrap";
+import { LinkContainer } from "react-router-bootstrap";
 
-import CreateTodo from "./components/create-todo.component";
-import EditTodo from "./components/edit-todo.component";
-import TodosList from "./components/todos-list.component"
+import "./App.css";
+import Routes from "./Routes";
 
-import logo from "./logo.svg";
+export default class App extends Component{
+  constructor(props)
+  {
+    super(props);
 
-class App extends Component{
-  render() {
-    return (
-      <Router>
-        <div className="container">
-          <nav className="navbar navbar-expand-lg navbar-light bg-light">
-            <a class="navbar-brand" href="" target="_blank">
-              <img src={logo} width="30" height="30" alt="" />
-            </a>
-            <Link to="/" className="navbar-brand">MERN Todo</Link>
-            <div className="collpase navbar-collapse">
-              <ul className="navbar-nav mr-auto">
-                <li className="navbar-item">
-                  <Link to="/" className="nav-link"> Todos </Link>
-                </li>
-                <li classname="navbar-item">
-                  <Link to="/create" className="nav-link"> Create Todo </Link>
-                </li>
-              </ul>
-            </div>
-          </nav>
-          <br/>
-        <Route path="/" exact component={TodosList} />
-        <Route path="/edit/:id" component={EditTodo} />
-        <Route path="/create" component={CreateTodo} />
-        </div>
-      </Router>
-    );
+    this.state = {
+      isAuthenticated: false
+    };
   }
-}
 
-export default App;
+  userHasAuthenticated = authenticated => {
+    this.setState({ isAuthenticated: authenticated});
+  }
+
+  handleLogout = event => {
+    this.userHasAuthenticated(false);
+  }
+
+  render() {
+    const childProps = {
+      isAuthenticated: this.state.isAuthenticated,
+      userHasAuthenticated: this.userHasAuthenticated
+    };
+    
+    return (
+      <div className="App container">
+        <Navbar fluid collapseOnSelect>
+          <Navbar.Header>
+            <Navbar.Brand>
+              <Link to="/">GID</Link>
+            </Navbar.Brand>
+            <Navbar.Toggle />
+          </Navbar.Header>
+          <Navbar.Collapse>
+            <Nav pullRight>
+              {this.state.isAuthenticated
+                ? <NavItem onClick={this.handleLogout}>Log Out</NavItem>
+                : <Fragment>
+                    <LinkContainer to="/signup">
+                      <NavItem>Sign Up</NavItem>
+                    </LinkContainer>
+                    <LinkContainer to="/login">
+                      <NavItem>Login</NavItem>
+                    </LinkContainer>
+                </Fragment>
+              }
+            </Nav>
+          </Navbar.Collapse>
+        </Navbar>
+        <Routes childProps={childProps}/>
+      </div>
+    );
+  }  
+}
