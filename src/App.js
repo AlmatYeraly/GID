@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import React, { Component, Fragment } from 'react';
 import { Link } from "react-router-dom";
 import { Nav, Navbar, NavItem } from "react-bootstrap";
@@ -60,3 +61,25 @@ export default class App extends Component{
     );
   }  
 }
+=======
+import React, { Component } from 'react';
+import { BrowserRouter, Route } from 'react-router-dom';
+import "bootstrap/dist/css/bootstrap.min.css";
+
+import TodosList from "./components/todos-list.component"
+
+class App extends Component {
+  constructor(props){
+      super(props);
+
+      this.state = {
+      }
+  }
+
+  render() {
+    return(<h1></h1>)
+  }
+}
+
+export default App;
+>>>>>>> e95eab774897b1bdcc9266eb070408acba175af2
